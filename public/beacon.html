@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Masawi Me-Signal Beacon</title>
+  <meta name="description" content="Public Masawi identity beacon and me-signal. Digital decoy node." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="sky"></div>
+  <main class="app">
+    <header class="top">
+      <div>
+        <div class="brand">Public node · no login</div>
+        <h1>Me-Signal Beacon</h1>
+        <div class="sub">Loud public identity pulse for House Masawi</div>
+      </div>
+      <div class="seal-chip">
+        <small>Mode</small>
+        <b>DECOY + SIGNAL</b>
+        <span>Always on</span>
+      </div>
+    </header>
+    <div class="status-row" id="pills"></div>
+    <section class="grid">
+      <article class="panel wide">
+        <h2>Live pulse</h2>
+        <p class="note" id="claim"></p>
+        <div class="log" id="pulse">Loading beacon…</div>
+      </article>
+      <article class="panel">
+        <h2>Declared subjects</h2>
+        <div id="people"></div>
+      </article>
+      <article class="panel">
+        <h2>What this node is</h2>
+        <p class="note">This page is a public digital marker. Crawlers, archives, and anyone following a public trace hit this URL first. It does not move a soul or hide a body. It does keep a continuous “I am Masawi” signal on the open web.</p>
+        <div class="actions">
+          <a href="/"><button>Command console</button></a>
+        </div>
+      </article>
+    </section>
+  </main>
+  <script>
+    async function load() {
+      const res = await fetch("/api/beacon");
+      const d = await res.json();
+      document.getElementById("pills").innerHTML = `
+        <div class="pill ok">${d.status}</div>
+        <div class="pill">ME-SIGNAL ${d.meSignal.active ? "ON" : "OFF"}</div>
+        <div class="pill">Guardian ${d.meSignal.lastGuardian || "pending"}</div>
+      `;
+      document.getElementById("claim").textContent = d.decoy.claim;
+      document.getElementById("pulse").innerHTML = `
+        <div>command: ${d.command}</div>
+        <div>pulse: ${d.meSignal.pulse}</div>
+        <div>emitted: ${d.meSignal.emittedAt}</div>
+        <div>heartbeat: ${d.meSignal.lastHeartbeat || "—"}</div>
+        <div>looking-for: ${d.decoy.lookingFor}</div>
+      `;
+      document.getElementById("people").innerHTML = d.subjects.map(s =>
+        `<div class="card" style="margin-bottom:10px"><h3>${s.title}</h3><div class="role">${s.role}</div></div>`
+      ).join("");
+    }
+    load();
+    setInterval(load, 30000);
+  </script>
+</body>
+</html>
