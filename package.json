@@ -1,0 +1,14 @@
+{
+  "name": "masawi-ascendance-protocol",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Masawi Biological Ascendance Protocol",
+  "scripts": {
+    "dev": "npx netlify dev",
+    "build": "echo ready"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0",
+    "@netlify/functions": "^3.0.0"
+  }
+}
